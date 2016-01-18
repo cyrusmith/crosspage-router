@@ -4,7 +4,7 @@
   "description": "Simple router that reads current url path and executes assigned controller",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "JASMINE_CONFIG_PATH=jasmine.json jasmine"
   },
   "repository": {
     "type": "git",
