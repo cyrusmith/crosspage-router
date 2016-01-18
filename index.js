@@ -1,3 +1,3 @@
 var Router = require('./lib/router');
 
-module.export = Router;
+module.exports = Router;
