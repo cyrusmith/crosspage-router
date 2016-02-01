@@ -1,8 +1,8 @@
 var Router = require('../lib/router');
 
-describe("Simple path", function() {
+describe("Router", function() {
 
-    it("Root route", function() {
+    it("with simple path", function() {
 
         var ctxRoot = null;
         var ctxSub = null;
@@ -44,7 +44,7 @@ describe("Simple path", function() {
 
     });
 
-    it("Route with params", function() {
+    it("with params", function() {
 
         var x = [null, null, null];
 
@@ -100,6 +100,48 @@ describe("Simple path", function() {
         expect(x[2].params).toEqual({
             itemId: '1234'
         });
+
+    });
+
+    it("with path prefix", function() {
+
+        var ctxRoot = null;
+        var ctxSub = null;
+
+        var ctrls = {
+            root: function(aCtx) {
+                ctxRoot = aCtx;
+            },
+            sub: function(aCtx) {
+                ctxSub = aCtx;
+            }
+        };
+
+        spyOn(ctrls, 'root').and.callThrough();
+        spyOn(ctrls, 'sub').and.callThrough();
+
+        var router = new Router({
+            ctrl: ctrls.root,
+            next: {
+                'subpath': {
+                    ctrl: ctrls.sub
+                }
+            }
+        }, '/admin/');
+
+        router.getPathname = jasmine.createSpy('getPathname spy').and.returnValue('admin/subpath');
+
+        router.start();
+
+        expect(ctrls.root).toHaveBeenCalled();
+        expect(ctxRoot).toEqual(jasmine.any(Object));
+        expect(ctxRoot.params).toEqual({});
+        expect(ctxRoot.path).toBe('/');
+
+        expect(ctrls.sub).toHaveBeenCalled();
+        expect(ctxSub).toEqual(jasmine.any(Object));
+        expect(ctxSub.params).toEqual({});
+        expect(ctxSub.path).toBe('/subpath');
 
     });
 
